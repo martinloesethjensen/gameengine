@@ -23,6 +23,11 @@ public abstract class GameEngine extends AppCompatActivity
 
     }
 
+    public boolean isTouchDown(int pointer)
+    {
+        return false;
+    }
+
     public void drawBitmap(Bitmap bitmap, int x, int y)
     {
 
