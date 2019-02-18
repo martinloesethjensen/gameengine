@@ -1,12 +1,13 @@
 package dk.kea.androidgame.martin.myfirstgameengine;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 public class TestScreen extends Screen
 {
-    int x = 0;
-    int y = 0;
-    Bitmap bitmap;
+    private int x = 0;
+    private int y = 0;
+    private Bitmap bitmap;
 
     protected TestScreen(GameEngine gameEngine)
     {
@@ -20,8 +21,11 @@ public class TestScreen extends Screen
     {
         if (gameEngine.isTouchDown(0))
         {
-
+            x = gameEngine.getTouchX(0);
+            y = gameEngine.getTouchY(0);
         }
+        gameEngine.clearFrameBuffer(Color.BLUE);
+        gameEngine.drawBitmap(bitmap, x, y);
     }
 
     @Override

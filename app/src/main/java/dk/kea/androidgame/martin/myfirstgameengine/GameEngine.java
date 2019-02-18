@@ -28,6 +28,16 @@ public abstract class GameEngine extends AppCompatActivity
         return false;
     }
 
+    public int getTouchX(int pointer)
+    {
+        return 0;
+    }
+
+    public int getTouchY(int pointer)
+    {
+        return 0;
+    }
+
     public void drawBitmap(Bitmap bitmap, int x, int y)
     {
 

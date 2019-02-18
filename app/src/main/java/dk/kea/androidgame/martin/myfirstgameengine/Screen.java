@@ -1,6 +1,6 @@
 package dk.kea.androidgame.martin.myfirstgameengine;
 
-abstract class Screen
+public abstract class Screen
 {
     protected final GameEngine gameEngine;
 
