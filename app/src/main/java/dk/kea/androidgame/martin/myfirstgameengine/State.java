@@ -4,6 +4,6 @@ public enum State
 {
     RUNNING,
     PAUSED,
-    RESUME,
+    RESUMED,
     DISPOSED
 }

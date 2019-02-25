@@ -15,7 +15,6 @@ public class TestScreen extends Screen
         bitmap = gameEngine.loadBitmap("bob.png");
     }
 
-
     @Override
     public void update(float deltaTime)
     {
@@ -24,19 +23,14 @@ public class TestScreen extends Screen
             x = gameEngine.getTouchX(0);
             y = gameEngine.getTouchY(0);
         }
-        gameEngine.clearFrameBuffer(Color.BLUE);
+        gameEngine.clearFrameBuffer(Color.GREEN);
         gameEngine.drawBitmap(bitmap, x, y);
+        gameEngine.drawBitmap(bitmap, 200, 300, 64, 64, 64,64);
     }
 
     @Override
-    public void pause()
-    {
-
-    }
+    public void pause(){}
 
     @Override
-    public void resume()
-    {
-
-    }
+    public void resume(){}
 }
