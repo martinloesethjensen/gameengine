@@ -10,12 +10,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
@@ -102,7 +100,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     public Bitmap loadBitmap(String fileName)
     {
         InputStream inputStream = null;
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         try
         {
             inputStream = getAssets().open(fileName);

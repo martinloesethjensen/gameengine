@@ -2,7 +2,6 @@ package dk.kea.androidgame.martin.myfirstgameengine.sound;
 
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-import android.provider.MediaStore;
 
 import java.io.IOException;
 
