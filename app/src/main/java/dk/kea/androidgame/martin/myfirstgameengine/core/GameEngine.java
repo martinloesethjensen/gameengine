@@ -1,6 +1,7 @@
 package dk.kea.androidgame.martin.myfirstgameengine.core;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import dk.kea.androidgame.martin.myfirstgameengine.sound.Music;
+import dk.kea.androidgame.martin.myfirstgameengine.sound.Sound;
 import dk.kea.androidgame.martin.myfirstgameengine.touch.MultiTouchHandler;
 import dk.kea.androidgame.martin.myfirstgameengine.touch.TouchEvent;
 import dk.kea.androidgame.martin.myfirstgameengine.touch.TouchEventPool;
@@ -43,6 +49,12 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     private List<TouchEvent> touchEventBuffer = new ArrayList<>();
     private List<TouchEvent> touchEventCopied = new ArrayList<>();
     private float[] accelerometer = new float[3]; // to hold the g-forces in three dimensions, x, y, and z
+    private SoundPool soundPool = new SoundPool.Builder()
+            .setMaxStreams(20)
+            .build();
+    private int framePerSecond;
+    private long currentTime = 0;
+    private long lastTime = 0;
 
     public abstract Screen createStartScreen();
 
@@ -54,6 +66,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(getSupportActionBar()).hide(); // hides the action bar
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
@@ -63,7 +76,6 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         surfaceView = new SurfaceView(this);
         setContentView(surfaceView); // places view on the physical screen
         surfaceHolder = surfaceView.getHolder();
-//        Log.d("GameEngine class", "We just finished the onCreate() method");
         screen = createStartScreen();
         if (surfaceView.getWidth() > surfaceView.getHeight())
         {
@@ -76,6 +88,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
             Sensor accelerometer = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0);
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         }
+
+        setVolumeControlStream(AudioManager.STREAM_MUSIC); // uses the volume the user already has set on his phone
     }
 
     public void setOffScreenSurface(int width, int height)
@@ -126,7 +140,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         return offScreenSurface.getHeight();
     }
 
-    public void drawBitmap(Bitmap bitmap, int x, int y)
+    public void drawBitmap(Bitmap bitmap, float x, float y)
     {
         if (canvas != null) canvas.drawBitmap(bitmap, x, y, null);
     }
@@ -152,10 +166,34 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         }
     }
 
-
     public void clearFrameBuffer(int color)
     {
         canvas.drawColor(color);
+    }
+
+    public Sound loadSound(String filename)
+    {
+        try
+        {
+            AssetFileDescriptor assetFileDescriptor = getAssets().openFd(filename);
+            int soundId = soundPool.load(assetFileDescriptor, 0);
+            return new Sound(soundPool, soundId);
+        } catch (IOException e)
+        {
+            throw new RuntimeException("Could not load sound file: " + filename);
+        }
+    }
+
+    public Music loadMusic(String filename)
+    {
+        try
+        {
+            AssetFileDescriptor assetFileDescriptor = getAssets().openFd(filename);
+            return new Music(assetFileDescriptor);
+        } catch (IOException e)
+        {
+            throw new RuntimeException("Could not load music file: " + filename);
+        }
     }
 
     public boolean isTouchDown(int pointer)
@@ -195,6 +233,32 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         System.arraycopy(sensorEvent.values, 0, accelerometer, 0, 3);
     }
 
+    private void fillEvents()
+    {
+        synchronized (this)
+        {
+            this.touchEventCopied.addAll(this.touchEventBuffer);
+            this.touchEventBuffer.clear();
+        }
+    }
+
+    private void freeEvents()
+    {
+        synchronized (touchEventCopied)
+        {
+            for (TouchEvent touchEvent : touchEventCopied)
+            {
+                touchEventPool.free(touchEvent);
+            }
+            touchEventCopied.clear();
+        }
+    }
+
+    public int getFramePerSecond()
+    {
+        return this.framePerSecond;
+    }
+
     public void run()
     {
         while (true)
@@ -206,24 +270,24 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
                     this.state = STATE_CHANGES.get(i);
                     if (this.state == State.DISPOSED)
                     {
-                        Log.d("GameEngine", "State changed to Disposed");
+//                        Log.d("GameEngine", "State changed to Disposed");
                         return;
                     }
                     if (this.state == State.PAUSED)
                     {
-                        Log.d("GameEngine", "State changed to Pause");
+//                        Log.d("GameEngine", "State changed to Pause");
                         return;
                     }
                     if (this.state == State.RESUMED)
                     {
-                        Log.d("GameEngine", "State changed to Resumed");
+//                        Log.d("GameEngine", "State changed to Resumed");
                         this.state = State.RUNNING;
                     }
                 } // end of for loop
                 STATE_CHANGES.clear();
                 if (this.state == State.RUNNING)
                 {
-                    Log.d("GameEngine running", "" + surfaceHolder.getSurface().isValid());
+//                    Log.d("GameEngine running", "" + surfaceHolder.getSurface().isValid());
                     if (!surfaceHolder.getSurface().isValid())
                     {
                         continue;
@@ -231,7 +295,10 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
                     Canvas canvas = surfaceHolder.lockCanvas();
                     // all drawing happens here
                     //canvas.drawColor(Color.rgb(0, 0, 255));
-                    if (screen != null) screen.update(0);
+                    this.currentTime = System.nanoTime();
+                    if (screen != null) screen.update((this.currentTime - this.lastTime) / 1_000_000_000.0f);
+                    this.lastTime = this.currentTime;
+                    fillEvents();
                     source.left = 0;
                     source.top = 0;
                     source.right = offScreenSurface.getWidth() - 1;
@@ -261,6 +328,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         if (isFinishing())
         {
             ((SensorManager) getSystemService(Context.SENSOR_SERVICE)).unregisterListener(this);
+            soundPool.release();
         }
     }
 

@@ -32,6 +32,7 @@ public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
         switch (action)
         {
             case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
                 touchEvent = touchEventPool.obtains();
                 touchEvent.type = TouchEvent.TouchEventType.DOWN;
                 touchEvent.pointer = pointerId;
@@ -45,12 +46,8 @@ public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
                     touchEventBuffer.add(touchEvent);
                 }
                 break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                break;
             case MotionEvent.ACTION_UP:
-                break;
             case MotionEvent.ACTION_POINTER_UP:
-                break;
             case MotionEvent.ACTION_CANCEL:
                 touchEvent = touchEventPool.obtains();
                 touchEvent.type = TouchEvent.TouchEventType.UP;
