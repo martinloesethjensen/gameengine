@@ -9,12 +9,12 @@ import dk.kea.androidgame.martin.myfirstgameengine.sound.Sound
 
 class TestScreen(gameEngine: GameEngine) : Screen(gameEngine) {
     private var x = 0f
+
     private var y = 100
     private val bitmap: Bitmap = gameEngine.loadBitmap("bob.png")
     private val sound: Sound = gameEngine.loadSound("blocksplosion.wav")
     private val backgroundMusic: Music = gameEngine.loadMusic("music.ogg")
     private var isPlaying = false
-
     init {
         isPlaying = true
     }
@@ -58,6 +58,10 @@ class TestScreen(gameEngine: GameEngine) : Screen(gameEngine) {
     override fun pause() {}
 
     override fun resume() {}
+
+    override fun dispose() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     companion object {
         private const val SOUND = 1f

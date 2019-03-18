@@ -59,7 +59,10 @@ abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorE
 
     abstract fun createStartScreen(): Screen
 
-    fun setScreen(screen: Screen) {}
+    fun setScreen(screen: Screen) {
+        if (this.screen != null) this.screen!!.dispose()
+        this.screen = screen
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,8 +128,8 @@ abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorE
         if (canvas != null) {
             source.left = sourceX
             source.top = sourceY
-            source.right = sourceWidth + sourceWidth
-            source.bottom = sourceHeight + sourceHeight
+            source.right = sourceX + sourceWidth
+            source.bottom = sourceY + sourceHeight
 
             destination.left = x
             destination.top = y
@@ -224,7 +227,7 @@ abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorE
                 if (this.state === State.RUNNING) {
 //                    Log.d("GameEngine running", "" + surfaceHolder?.surface?.isValid);
                     if (!surfaceHolder!!.surface.isValid) {
-                        return@synchronized
+                        return@synchronized // continue
                     }
                     val canvas = surfaceHolder!!.lockCanvas()
                     // all drawing happens here

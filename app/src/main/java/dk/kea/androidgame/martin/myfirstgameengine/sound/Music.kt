@@ -6,7 +6,7 @@ import android.media.MediaPlayer
 import java.io.IOException
 
 class Music(assetFileDescriptor: AssetFileDescriptor) : MediaPlayer.OnCompletionListener {
-    private val mediaPlayer: MediaPlayer // MediaPlayer doing the music playback
+    private val mediaPlayer: MediaPlayer = MediaPlayer() // MediaPlayer doing the music playback
     private var isPrepared = false // is the MediaPlayer ready?
 
     val isPlaying: Boolean
@@ -22,7 +22,6 @@ class Music(assetFileDescriptor: AssetFileDescriptor) : MediaPlayer.OnCompletion
         }
 
     init {
-        this.mediaPlayer = MediaPlayer()
         try {
             mediaPlayer.setDataSource(
                     assetFileDescriptor.fileDescriptor,
