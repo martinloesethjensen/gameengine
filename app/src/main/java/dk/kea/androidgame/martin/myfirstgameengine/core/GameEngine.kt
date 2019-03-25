@@ -1,10 +1,8 @@
 package dk.kea.androidgame.martin.myfirstgameengine.core
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Rect
+import android.graphics.*
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -12,8 +10,6 @@ import android.hardware.SensorManager
 import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Bundle
-import android.support.v7.app.ActionBar
-import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.Window
@@ -28,7 +24,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.util.*
 
-abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorEventListener {
+abstract class GameEngine : Activity(), Runnable, TouchHandler, SensorEventListener {
     private var mainLoopThread: Thread? = null
     private var state = State.PAUSED
     private var surfaceView: SurfaceView? = null
@@ -47,6 +43,8 @@ abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorE
     val framePerSecond: Int = 0
     private var currentTime: Long = 0
     private var lastTime: Long = 0
+    private var paint = Paint()
+    lateinit var music: Music
 
     val frameBufferWidth: Int
         get() = offScreenSurface!!.width
@@ -68,7 +66,6 @@ abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorE
         super.onCreate(savedInstanceState)
 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        Objects.requireNonNull<ActionBar>(supportActionBar).hide() // hides the action bar
         this.window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         // Prepared variables used for drawing on screen
@@ -152,7 +149,6 @@ abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorE
         } catch (e: IOException) {
             throw RuntimeException("Could not load sound file: $filename")
         }
-
     }
 
     fun loadMusic(filename: String): Music {
@@ -162,11 +158,31 @@ abstract class GameEngine : AppCompatActivity(), Runnable, TouchHandler, SensorE
         } catch (e: IOException) {
             throw RuntimeException("Could not load music file: $filename")
         }
+    }
+
+    fun loadFont(filename: String): Typeface {
+        val font = Typeface.createFromAsset(assets, filename)
+        if (font === null) {
+            throw java.lang.RuntimeException("Oh shit, I could not load font from file: $filename")
+        }
+        return font
+    }
+
+    fun drawText(font: Typeface, text: String, x: Float, y: Float, color: Int, size: Float): Unit {
+        paint.typeface = font
+        paint.textSize = size
+        paint.color = color
+        canvas?.drawText(text, x, y, paint)
+
 
     }
 
     override fun isTouchDown(pointer: Int): Boolean {
         return touchHandler!!.isTouchDown(pointer)
+    }
+
+    fun getTouchEvents(): List<TouchEvent> {
+        return touchEventCopied
     }
 
     /**

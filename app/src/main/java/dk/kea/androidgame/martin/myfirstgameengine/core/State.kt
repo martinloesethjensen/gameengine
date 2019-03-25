@@ -4,5 +4,5 @@ enum class State {
     RUNNING,
     PAUSED,
     RESUMED,
-    DISPOSED
+    DISPOSED,
 }
