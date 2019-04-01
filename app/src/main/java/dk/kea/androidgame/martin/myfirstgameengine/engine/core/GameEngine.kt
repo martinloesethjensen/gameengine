@@ -73,10 +73,6 @@ abstract class GameEngine : Activity(), Runnable, TouchHandler, SensorEventListe
         setContentView(surfaceView) // places view on the physical screen
         surfaceHolder = surfaceView!!.holder
         screen = createStartScreen()
-        if (surfaceView!!.width > surfaceView!!.height) {
-            setOffScreenSurface(480, 320)
-        } else
-            setOffScreenSurface(320, 480)
         touchHandler = MultiTouchHandler(surfaceView!!, touchEventBuffer, touchEventPool)
         val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         if (sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).size != 0) {
@@ -283,6 +279,10 @@ abstract class GameEngine : Activity(), Runnable, TouchHandler, SensorEventListe
 
     override fun onResume() {
         super.onResume()
+        if (surfaceView!!.width > surfaceView!!.height) {
+            setOffScreenSurface(480, 320)
+        } else
+            setOffScreenSurface(320, 480)
         mainLoopThread = Thread(this)
         mainLoopThread!!.start() // starts the thread
         synchronized(STATE_CHANGES) {

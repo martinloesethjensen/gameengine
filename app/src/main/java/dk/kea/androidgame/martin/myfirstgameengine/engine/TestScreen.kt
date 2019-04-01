@@ -12,8 +12,8 @@ class TestScreen(gameEngine: GameEngine) : Screen(gameEngine) {
 
     private var y = 100
     private val bitmap: Bitmap = gameEngine.loadBitmap("engine/bob.png")
-    private val sound: Sound = gameEngine.loadSound("breakout/blocksplosion.wav")
-    private val backgroundMusic: Music = gameEngine.loadMusic("breakout/music.ogg")
+    private val sound: Sound = gameEngine.loadSound("engine/blocksplosion.wav")
+    private val backgroundMusic: Music = gameEngine.loadMusic("engine/music.ogg")
     private var isPlaying = false
     init {
         isPlaying = true
