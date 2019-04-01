@@ -1,12 +1,12 @@
-package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame
+package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.screen
 
 import android.graphics.Bitmap
-import dk.kea.androidgame.martin.myfirstgameengine.core.GameEngine
-import dk.kea.androidgame.martin.myfirstgameengine.core.Screen
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.GameEngine
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.Screen
 
 class MainMenuScreen(override val gameEngine: GameEngine) : Screen(gameEngine) {
-    private var mainMenu: Bitmap = gameEngine.loadBitmap("mainmenu.png")
-    private var insertCoin: Bitmap = gameEngine.loadBitmap("insertcoin.png")
+    private var mainMenu: Bitmap = gameEngine.loadBitmap("breakout/mainmenu.png")
+    private var insertCoin: Bitmap = gameEngine.loadBitmap("breakout/insertcoin.png")
     var passedTime: Float = 0f
     var startTime: Long = System.nanoTime()
 

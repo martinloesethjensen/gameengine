@@ -1,11 +1,12 @@
 package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame
 
-import dk.kea.androidgame.martin.myfirstgameengine.core.GameEngine
-import dk.kea.androidgame.martin.myfirstgameengine.core.Screen
+import dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.screen.MainMenuScreen
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.GameEngine
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.Screen
 
 class BreakoutGame : GameEngine() {
     override fun createStartScreen(): Screen {
-        music = this.loadMusic("music.ogg")
+        music = this.loadMusic("breakout/music.ogg")
         return MainMenuScreen(this)
     }
 

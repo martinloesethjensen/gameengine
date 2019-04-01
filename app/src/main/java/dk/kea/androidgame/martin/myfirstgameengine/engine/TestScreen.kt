@@ -1,19 +1,19 @@
-package dk.kea.androidgame.martin.myfirstgameengine
+package dk.kea.androidgame.martin.myfirstgameengine.engine
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import dk.kea.androidgame.martin.myfirstgameengine.core.GameEngine
-import dk.kea.androidgame.martin.myfirstgameengine.core.Screen
-import dk.kea.androidgame.martin.myfirstgameengine.sound.Music
-import dk.kea.androidgame.martin.myfirstgameengine.sound.Sound
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.GameEngine
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.Screen
+import dk.kea.androidgame.martin.myfirstgameengine.engine.sound.Music
+import dk.kea.androidgame.martin.myfirstgameengine.engine.sound.Sound
 
 class TestScreen(gameEngine: GameEngine) : Screen(gameEngine) {
     private var x = 0f
 
     private var y = 100
-    private val bitmap: Bitmap = gameEngine.loadBitmap("bob.png")
-    private val sound: Sound = gameEngine.loadSound("blocksplosion.wav")
-    private val backgroundMusic: Music = gameEngine.loadMusic("music.ogg")
+    private val bitmap: Bitmap = gameEngine.loadBitmap("engine/bob.png")
+    private val sound: Sound = gameEngine.loadSound("breakout/blocksplosion.wav")
+    private val backgroundMusic: Music = gameEngine.loadMusic("breakout/music.ogg")
     private var isPlaying = false
     init {
         isPlaying = true

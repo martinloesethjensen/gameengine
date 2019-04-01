@@ -1,4 +1,4 @@
-package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame
+package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.model
 
 data class Block(var x: Float, var y: Float, var type: Int) {
     companion object {

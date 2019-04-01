@@ -1,4 +1,6 @@
-package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame
+package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.model
+
+import dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.world.World
 
 class Paddle {
     companion object {

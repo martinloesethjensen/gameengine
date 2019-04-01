@@ -1,11 +1,14 @@
-package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame
+package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.screen
 
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
-import dk.kea.androidgame.martin.myfirstgameengine.core.GameEngine
-import dk.kea.androidgame.martin.myfirstgameengine.core.Screen
-import dk.kea.androidgame.martin.myfirstgameengine.touch.TouchEvent
+import dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.CollisionListener
+import dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.world.World
+import dk.kea.androidgame.martin.myfirstgameengine.breakoutGame.world.WorldRenderer
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.GameEngine
+import dk.kea.androidgame.martin.myfirstgameengine.engine.core.Screen
+import dk.kea.androidgame.martin.myfirstgameengine.engine.touch.TouchEvent
 
 class GameScreen(gameEngine: GameEngine) : Screen(gameEngine) {
     enum class State {
@@ -14,14 +17,28 @@ class GameScreen(gameEngine: GameEngine) : Screen(gameEngine) {
         GAME_OVER
     }
 
-    var background: Bitmap = gameEngine.loadBitmap("background.png")
-    var resume: Bitmap = gameEngine.loadBitmap("resume.png")
-    var gameOver: Bitmap = gameEngine.loadBitmap("gameover.png")
+    var background: Bitmap = gameEngine.loadBitmap("breakout/background.png")
+    var resume: Bitmap = gameEngine.loadBitmap("breakout/resume.png")
+    var gameOver: Bitmap = gameEngine.loadBitmap("breakout/gameover.png")
     var state: State = State.RUNNING
-    var world: World = World()
+    private var world = World(object : CollisionListener {
+        override fun collisionWall() {
+            bounceSound.play(1f)
+        }
+
+        override fun collisionPaddle() {
+            bounceSound.play(1f)
+        }
+
+        override fun collisionBlocks() {
+            blockSound.play(1f)
+        }
+    })
     var worldRenderer: WorldRenderer = WorldRenderer(gameEngine, world)
-    var font: Typeface = gameEngine.loadFont("font.ttf")
+    var font: Typeface = gameEngine.loadFont("breakout/font.ttf")
     var showText = "Nothing good to show"
+    var bounceSound = gameEngine.loadSound("breakout/bounce.wav")
+    var blockSound = gameEngine.loadSound("breakout/blocksplosion.wav")
 
 
     /*
