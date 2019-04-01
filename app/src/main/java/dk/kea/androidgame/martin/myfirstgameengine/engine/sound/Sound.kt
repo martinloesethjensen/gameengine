@@ -1,4 +1,4 @@
-package dk.kea.androidgame.martin.myfirstgameengine.sound
+package dk.kea.androidgame.martin.myfirstgameengine.engine.sound
 
 import android.media.SoundPool
 

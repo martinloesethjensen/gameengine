@@ -1,7 +1,7 @@
 package dk.kea.androidgame.martin.myfirstgameengine.breakoutGame
 
 
-class World {
+class World(private var collisionListener: CollisionListener) {
     companion object {
         const val MIN_X = 0f
         const val MAX_X = 319f
@@ -29,19 +29,22 @@ class World {
         ball.x += ball.velocityX * deltaTime
         ball.y += ball.velocityY * deltaTime
 
-        // paddle.x = ball.x - (Paddle.WIDTH / 2) // todo: Remove when all testing is done. This is only used for testing.
+        paddle.x = ball.x - (Paddle.WIDTH / 2) // todo: Remove when all testing is done. This is only used for testing.
 
         if (ball.x < MIN_X) { // if it reaches the end of the world --> bounce from the wall
             ball.velocityX = -ball.velocityX
             ball.x = MIN_X
+            collisionListener.collisionWall()
         }
         if (ball.x > MAX_X - Ball.WIDTH) {
             ball.velocityX = -ball.velocityX
             ball.x = MAX_X - Ball.WIDTH
+            collisionListener.collisionWall()
         }
         if (ball.y < MIN_Y) {
             ball.velocityY = -ball.velocityY
             ball.y = MIN_Y
+            collisionListener.collisionWall()
         }/*
         if (ball.y > MAX_Y ) {
             GameScreen.State.GAME_OVER
@@ -79,8 +82,8 @@ class World {
             generateBlocks()
             ball.x = 160f
             ball.y = 320 - 40f
-            ball.velocityY = -Ball.INITIAL_SPEED
-            ball.velocityY = Ball.INITIAL_SPEED
+            ball.velocityY = -Ball.INITIAL_SPEED * 1.3f
+            ball.velocityX = Ball.INITIAL_SPEED * 1.3f
         }
     } // end of update method
 
@@ -89,6 +92,8 @@ class World {
         if (((ball.x + Ball.WIDTH) >= paddle.x) && (ball.x < (paddle.x + Paddle.WIDTH)) && ((ball.y + Ball.HEIGHT) > paddle.y)) {
             ball.y = ball.y - ball.velocityY * deltaTime * 1.01f
             ball.velocityY *= -1
+
+            collisionListener.collisionPaddle()
 
             // increment the hits to increase the level
             hits++
@@ -119,6 +124,7 @@ class World {
                 ball.x = ball.x - oldVelocityX * deltaTime * 1.01f
                 ball.y = ball.y - oldVelocityY * deltaTime * 1.01f
                 points += 10 - block.type
+                collisionListener.collisionBlocks()
                 break // no need to check collision with other block when it hit this block
             }
             i++

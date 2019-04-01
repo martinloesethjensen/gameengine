@@ -1,4 +1,4 @@
-package dk.kea.androidgame.martin.myfirstgameengine.touch
+package dk.kea.androidgame.martin.myfirstgameengine.engine.touch
 
 /**
  * Class with responsibilities a touch needs

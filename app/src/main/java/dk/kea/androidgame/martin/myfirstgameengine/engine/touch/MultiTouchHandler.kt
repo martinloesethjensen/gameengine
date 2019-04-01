@@ -1,4 +1,4 @@
-package dk.kea.androidgame.martin.myfirstgameengine.touch
+package dk.kea.androidgame.martin.myfirstgameengine.engine.touch
 
 import android.view.MotionEvent
 import android.view.View
