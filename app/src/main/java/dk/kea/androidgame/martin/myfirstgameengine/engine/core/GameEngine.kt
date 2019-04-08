@@ -244,10 +244,11 @@ abstract class GameEngine : Activity(), Runnable, TouchHandler, SensorEventListe
                     val canvas = surfaceHolder!!.lockCanvas()
                     // all drawing happens here
                     //canvas.drawColor(Color.rgb(0, 0, 255));
+                    fillEvents()
                     this.currentTime = System.nanoTime()
                     if (screen != null) screen!!.update((this.currentTime - this.lastTime) / 1_000_000_000.0f)
                     this.lastTime = this.currentTime
-                    fillEvents()
+                    freeEvents()
                     source.left = 0
                     source.top = 0
                     source.right = offScreenSurface!!.width - 1
